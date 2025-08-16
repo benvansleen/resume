@@ -1,0 +1,6 @@
+result
+auto
+/.direnv/
+/.pre-commit-config.yaml
+/.cruft/
+/.git-original/

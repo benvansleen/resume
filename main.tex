@@ -1,0 +1,195 @@
+\documentclass[10pt]{article}
+\usepackage[margin=0.5in]{geometry}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tgtermes}
+\usepackage[T1]{fontenc}
+
+\pagenumbering{gobble}
+\setlength{\parindent}{0pt}
+
+\usepackage{titlesec}
+\titlespacing*{\section}
+  {0pt}   % left indent
+  {0.25em} % space before section title
+  {0.35em}% space after section title
+
+
+\usepackage{xparse}
+\ExplSyntaxOn
+\NewDocumentCommand{\resumeheader}{m+m}
+ {
+  \begin{center}
+    {\Large\bfseries\scshape #1} \\
+    \seq_set_from_clist:Nn \l_tmpa_seq { #2 }
+    \seq_use:Nn \l_tmpa_seq { \;$\cdot$\; }
+  \end{center}
+ }
+\ExplSyntaxOff
+
+
+%% \setlist[itemize]{left=0pt,label=--,itemsep=0pt,topsep=0pt}
+\setlist[itemize]{
+    leftmargin=1.5em,
+    topsep=0pt,
+    %% labelsep=0.5em,
+    itemsep=0ex,
+    nosep,
+    %% label=\raisebox{0.2ex}{\rule{0.30em}{0.30em}}
+}
+
+%% line break btwn document sections
+\titleformat{\section}{\large\bfseries}{}{0em}{}[\titlerule]
+\renewcommand{\titlerule}{
+  \vskip 0.01ex
+  \hrule height 0.8pt % thickness = 1pt (default is ~0.4pt)
+}
+
+
+\newcommand{\roleheader}[3]{
+  \vspace{0.8ex}
+  \textbf{#1}, #2 \hfill #3
+}
+\newcommand{\role}[4]{
+  \roleheader{#1}{#2}{#3}
+
+  #4
+}
+\newcommand{\itemizedrole}[5]{
+  \roleheader{#1}{#2}{#3 -- #4}
+
+  \begin{itemize}
+    #5
+  \end{itemize}
+}
+\newcommand{\subrole}[5]{
+  \vspace{0.1ex}
+  \textit{#1, #2} \hfill \textit{#3 -- #4}
+
+  \begin{itemize}
+    #5
+  \end{itemize}
+}
+
+
+
+\begin{document}
+\resumeheader
+{Ben Van Sleen}
+{
+	Arlington, VA 22201,
+    %% Let's not publish my email & phone number.
+    %% When running for a one-off application, uncomment the below
+    % {XXX.XXX.XXXX}
+    % \href{mailto:someone@email.com}{someone@email.com},
+	\href{https://github.com/benvansleen}{github.com/benvansleen},
+	\href{https://linkedin.com/in/benvansleen}{linkedin.com/in/benvansleen},
+}
+
+\section*{Education}
+\textbf{Vanderbit University}, School of Engineering \hfill Nashville, TN \\
+\hspace*{1em}\textit{M.S. Computer Science; B.E. Electrical \& Computer Engineering, Economics} \hfill May 2023 \\
+\textbf{Undergraduate GPA:} 3.962/4.0 $\mid$ \textbf{Graduate GPA:} 4.0/4.0 \\
+\textbf{Technologies:} Python, Rust, Javascript, React, Java, Clojure, C++, PyTorch, Docker, Kubernetes, ZooKeeper \\
+\textbf{Coursework:} Deep Learning, NLP in Healthcare, Distributed Systems, Web-Based System Architecture
+
+
+\section*{Professional Experience}
+\role
+{McKinsey \& Company}
+{Washington, D.C.}
+{June 2022 -- Aug 2022, Aug 2023 -- Present}
+{
+	\subrole
+	{Quality Assurance Lead}
+	{Lilli}
+	{Sept 2023}
+	{Dec 2023}
+	{
+		\item Identified and triaged bugs across stack for RAG-based generative AI search tool supporting 10,000+ users; defined acceptance tests and coordinated across 100+ person team to ship features and fixes on schedule
+		\item Drastically improved developer velocity by automating existing process to reduce integration test time 66\%
+		\item Designed, scoped, and delivered backend implementation of feature suggesting follow-up queries to help answer questions users did not know to ask – driving longer chat threads and increasing overall satisfaction
+		\item Introduced neural network compilation step to reduce average inference time by 40\% and worst-case time 99.2\% under heavy loads
+	}
+
+	\subrole
+	{Digital Business Analyst}
+	{Pricing Transformation}
+	{Jan 2024}
+	{June 2024}
+	{
+		\item Used historical quoting and invoicing data to identify, design, and begin implementation of 3 initiatives to improve quality of earnings; on track to realize \$60M of additional gross profit
+		\item Developed Tableau data flows and dashboards to enable real-time margin visibility and impact tracking
+	}
+
+	\subrole
+	{Summer Business Analyst}
+	{Cost Transformation}
+	{June 2022}
+	{Aug 2022}
+	{
+		\item Collaborated with client-side counterparts to design, size, and sustainably implement 30+ initiatives mitigating pain points in crude, renewable, and product transport processes
+
+	}
+}
+
+\itemizedrole
+{Vanderbilt Institute for Software Integrated Systems}
+{Nashville, TN}
+{June 2023}
+{Aug 2023}
+{
+
+	\item Designed and implemented Modelica-based systems engineering tool to allow LLMs to autonomously generate, debug, and compose components
+	\item Presented research on AI and LLM safety to 2023 National Science Foundation Munich PIRE conference
+}
+
+\itemizedrole
+{Vanderbilt Network and Data Science Lab}
+{Nashville, TN}
+{Dec 2020}
+{May 2022}
+{
+
+	\item Evaluated graduate students in DS 5720: Social Network Analysis using PyTorch-Geometric
+	\item Built transformer-based time-series network to detect patterns indicating depression within the Autism community
+}
+
+\itemizedrole
+{Emerald Coast Yachts}
+{Pensacola Beach, FL}
+{Mar 2019}
+{Aug 2020}
+{
+	\item Taught multi-day, live-aboard sailing classes certifying students to charter vessels
+}
+
+
+\section*{Academic Projects}
+\itemizedrole
+{Simply Sickle / Senior Design Project}
+{Vanderbilt Locke Biosensing Lab}
+{Aug 2022}
+{May 2023}
+{
+	\item Developed computer vision algorithm to identify percentage of sickled hemoglobin using OpenCV, SciKit-Learn, Raspberry Pi
+	\item Achieved better than 98\% accuracy in differentiating carrier, non-carrier, and diseased samples
+}
+
+\itemizedrole
+{Managing Director}
+{Vanderbilt Students Consulting for Nonprofit Organizations}
+{Sept 2019}
+{May 2023}
+{
+	\item Led team delivering real-time PowerBI dashboard to unify metrics across 8 separate United Way projects
+	\item Designed lobbying strategy for Special Olympics Tennessee to be funded in state budget
+	\item Built Google Cloud app to identify priority schools likely to benefit from Special Olympics program
+}
+
+
+\section*{Distinctions \& Interests}
+\textbf{Distinctions:} Tau Beta Pi, Magna Cum Laude, Walter C. Criley Interdisciplinary Prize, National Merit Scholar \\
+\textbf{Interests:} Talking SEC football, Zac Brown Band, playing lacrosse, fantasy football, teaching sailing, Guix OS
+
+\end{document}

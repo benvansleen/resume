@@ -117,6 +117,7 @@
             hooks = {
               git-add-pdf = {
                 enable = true;
+                stages = [ "pre-push" ];
                 entry = lib.getExe (
                   pkgs.writeShellApplication {
                     name = "git-add-pdf";

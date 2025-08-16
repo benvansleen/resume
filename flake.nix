@@ -117,7 +117,7 @@
             hooks = {
               git-add-pdf = {
                 enable = true;
-                stages = [ "pre-push" ];
+                stages = [ "pre-commit" ];
                 entry = lib.getExe (
                   pkgs.writeShellApplication {
                     name = "git-add-pdf";
@@ -126,9 +126,18 @@
                       poppler-utils
                     ];
                     text = ''
+                      before="$(git ls-files -s ${documentName}.pdf ${documentName}.png 2>/dev/null)"
+
                       cp -f result/${documentName}.pdf ./
                       pdftoppm ${documentName}.pdf ${documentName} -png -singlefile
                       ${lib.getExe pkgs.git} add ${documentName}.pdf ${documentName}.png
+
+                      after="$(git ls-files -s ${documentName}.pdf ${documentName}.png 2>/dev/null)"
+
+                      if [ "$before" != "$after" ]; then
+                        echo "media files updated & staged. Commit again"
+                        exit 1
+                      fi
                     '';
                   }
                 );

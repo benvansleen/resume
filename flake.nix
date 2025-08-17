@@ -46,9 +46,9 @@
         };
 
       in
-      rec {
-        packages = rec {
-          default = document;
+      {
+        packages = {
+          default = self.packages.${system}.document;
           document = pkgs.stdenvNoCC.mkDerivation rec {
             name = "resume";
             src = self;

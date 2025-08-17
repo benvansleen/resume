@@ -47,12 +47,8 @@
 \ExplSyntaxOff
 
 
-%% \setlist[itemize]{left=0pt,label=--,itemsep=0pt,topsep=0pt}
 \setlist[itemize]{
     leftmargin=1.5em,
-    topsep=0pt,
-    %% labelsep=0.5em,
-    itemsep=0ex,
     nosep,
     %% label=\raisebox{0.2ex}{\rule{0.30em}{0.30em}}
 }
@@ -61,7 +57,7 @@
 \titleformat{\section}{\large\bfseries}{}{0em}{}[\hrule height 0.7pt]
 
 \newcommand{\postlinebreakspacing} {
-  \vspace{0.4ex}
+  \vspace{0.7ex}
 }
 \newcommand{\roleheader}[3]{
   \postlinebreakspacing
@@ -80,7 +76,7 @@
   \end{itemize}
 }
 \newcommand{\subrole}[5]{
-  \vspace{0.1ex}
+  \vspace{0.4ex}
   \textit{#1, #2} \hfill \textit{#3 -- #4}
 
   \begin{itemize}
@@ -224,6 +220,7 @@
 
 
 \section*{Distinctions \& Interests}
+\postlinebreakspacing
 \lines
 {
 	\listline{Distinctions} {Graduated \textit{Magna Cum Laude}, Tau Beta Pi, Walter C. Criley Interdisciplinary Prize, National Merit Scholar},

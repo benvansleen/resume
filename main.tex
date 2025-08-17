@@ -1,4 +1,4 @@
-\documentclass[10pt]{article}
+\documentclass[10.5pt]{article}
 \usepackage[margin=0.5in]{geometry}
 \usepackage{enumitem}
 \usepackage[hidelinks]{hyperref}
@@ -11,8 +11,8 @@
 \usepackage{titlesec}
 \titlespacing*{\section}
   {0pt}   % left indent
-  {0.25em} % space before section title
-  {0.35em}% space after section title
+  {0.35ex} % space before section title
+  {0.55ex}% space after section title
 
 
 \usepackage{xparse}
@@ -20,11 +20,30 @@
 \NewDocumentCommand{\resumeheader}{m+m}
  {
   \begin{center}
-    {\Large\bfseries\scshape #1} \\
+    {\LARGE\bfseries\scshape #1} \\
+    \vskip 0.5ex
     \seq_set_from_clist:Nn \l_tmpa_seq { #2 }
     \seq_use:Nn \l_tmpa_seq { \;$\cdot$\; }
   \end{center}
  }
+
+\NewDocumentCommand{\lines}{m+m}
+ {
+    \seq_set_from_clist:Nn \l_tmpa_seq { #1 }
+    \seq_use:Nn \l_tmpa_seq { \\ }
+ }
+\NewDocumentCommand{\listline}{m+m}
+ {
+   \textbf{#1:\;}
+    \seq_set_from_clist:Nn \l_tmpa_seq { #2 }
+    \seq_use:Nn \l_tmpa_seq { ,\; }
+ }
+
+\NewDocumentCommand{\getenv}{om}
+{
+  \sys_get_shell:nnN{ kpsewhich ~ --var-value ~ #2 }{}#1
+}
+
 \ExplSyntaxOff
 
 
@@ -39,15 +58,13 @@
 }
 
 %% line break btwn document sections
-\titleformat{\section}{\large\bfseries}{}{0em}{}[\titlerule]
-\renewcommand{\titlerule}{
-  \vskip 0.01ex
-  \hrule height 0.8pt % thickness = 1pt (default is ~0.4pt)
+\titleformat{\section}{\large\bfseries}{}{0em}{}[\hrule height 0.7pt]
+
+\newcommand{\postlinebreakspacing} {
+  \vspace{0.4ex}
 }
-
-
 \newcommand{\roleheader}[3]{
-  \vspace{0.8ex}
+  \postlinebreakspacing
   \textbf{#1}, #2 \hfill #3
 }
 \newcommand{\role}[4]{
@@ -74,24 +91,29 @@
 
 
 \begin{document}
+\getenv[\PHONE]{PHONE}
+\getenv[\EMAIL]{EMAIL}
+
 \resumeheader
 {Benjamin Van Sleen}
 {
 	{Arlington, VA 22201},
-	%% Let's not publish my email & phone number.
-	%% When running for a one-off application, uncomment the below
-	% {XXX.XXX.XXXX}
-	% \href{mailto:someone@email.com}{someone@email.com},
+	\PHONE,
+	\href{mailto:\EMAIL}{\EMAIL},
 	\href{https://github.com/benvansleen}{github.com/benvansleen},
 	\href{https://linkedin.com/in/benvansleen}{linkedin.com/in/benvansleen},
 }
 
 \section*{Education}
-\textbf{Vanderbit University}, School of Engineering \hfill Nashville, TN \\
-\hspace*{1em}\textit{M.S. Computer Science; B.E. Electrical \& Computer Engineering, Economics} \hfill May 2023 \\
-\textbf{Undergraduate GPA:} 3.962/4.0 $\mid$ \textbf{Graduate GPA:} 4.0/4.0 \\
-\textbf{Technologies:} Python, Rust, Javascript, React, Java, Clojure, C++, PyTorch, Docker, Kubernetes, ZooKeeper \\
-\textbf{Coursework:} Deep Learning, NLP in Healthcare, Distributed Systems, Web-Based System Architecture
+\postlinebreakspacing
+\lines
+{
+	{\textbf{Vanderbit University}, School of Engineering \hfill Nashville, TN},
+	\hspace*{1em}\textit{M.S. Computer Science; B.E. Electrical \& Computer Engineering, Economics} \hfill May 2023,
+	\listline{Graduate GPA} {4.0/4.0} $\mid$ \listline{Undergraduate GPA} {3.962/4.0},
+	\listline{Technologies} {Python, Rust, Javascript, React, Java, Clojure, C++, PyTorch, Docker, Kubernetes, ZooKeeper},
+	\listline{Coursework} {Deep Learning, NLP in Healthcare, Distributed Systems, Web-Based System Architecture},
+}
 
 
 \section*{Professional Experience}
@@ -189,7 +211,10 @@
 
 
 \section*{Distinctions \& Interests}
-\textbf{Distinctions:} Tau Beta Pi, Magna Cum Laude, Walter C. Criley Interdisciplinary Prize, National Merit Scholar \\
-\textbf{Interests:} Talking SEC football, Zac Brown Band, playing lacrosse, fantasy football, teaching sailing, Guix OS
+\lines
+{
+	\listline{Distinctions} {Tau Beta Pi, Magna Cum Laude, Walter C. Criley Interdisciplinary Prize, National Merit Scholar},
+	\listline{Interests} {Talking SEC football, Zac Brown Band, playing lacrosse, fantasy football, teaching sailing, Guix OS},
+}
 
 \end{document}

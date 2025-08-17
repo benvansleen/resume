@@ -3,7 +3,18 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
+    systems.url = "github:nix-systems/default";
+    flake-utils = {
+      url = "github:numtide/flake-utils";
+      inputs.systems.follows = "systems";
+    };
+    secrets = {
+      url = "git+ssh://git@github.com/benvansleen/secrets.git";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        systems.follows = "systems";
+      };
+    };
     pre-commit-hooks = {
       url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -14,8 +25,10 @@
     {
       self,
       nixpkgs,
+      secrets,
       flake-utils,
       pre-commit-hooks,
+      ...
     }:
     with flake-utils.lib;
     eachSystem allSystems (
@@ -66,6 +79,9 @@
             ];
 
             buildPhase = ''
+              export PHONE="${lib.concatStringsSep "." secrets.personal-info.phone}"
+              export EMAIL="${secrets.personal-info.email}"
+
               export PATH="${pkgs.lib.makeBinPath buildInputs}";
               mkdir -p .cache/texmf-var
               env TEXMFHOME=.cache TEXMFVAR=.cache/texmf-var \

@@ -1,4 +1,4 @@
- <img alt="PNG of `main.pdf`" src="main.png?">
+ <img alt="PNG of `main.pdf`" src="./media/main.png?">
 
 
 ## Development setup

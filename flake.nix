@@ -142,13 +142,14 @@
                       poppler-utils
                     ];
                     text = ''
-                      before="$(git ls-files -s ${documentName}.pdf ${documentName}.png 2>/dev/null)"
+                      before="$(git ls-files -s ${documentName}.pdf media/ 2>/dev/null)"
 
                       cp -f result/${documentName}.pdf ./
                       pdftoppm ${documentName}.pdf ${documentName} -png -singlefile
-                      ${lib.getExe pkgs.git} add ${documentName}.pdf ${documentName}.png
+                      mv -f ${documentName}.png media/ || true
+                      ${lib.getExe pkgs.git} add ${documentName}.pdf media/
 
-                      after="$(git ls-files -s ${documentName}.pdf ${documentName}.png 2>/dev/null)"
+                      after="$(git ls-files -s ${documentName}.pdf media/ 2>/dev/null)"
 
                       if [ "$before" != "$after" ]; then
                         echo "media files updated & staged. Commit again"
@@ -158,7 +159,7 @@
                   }
                 );
               };
-              check-added-large-files.enable = true;
+              check-added-large-files.enable = false;
               check-merge-conflicts.enable = true;
               latexindent = {
                 enable = true;

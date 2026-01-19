@@ -149,7 +149,9 @@
                       pdftoppm ${documentName}.pdf ${documentName} -png -singlefile
                       mv -f ${documentName}.png media/ || true
                       cache_hash="$(${lib.getExe pkgs.git} hash-object media/${documentName}.png | cut -c1-7)"
-                      ${lib.getExe pkgs.perl} -i -pe "s|media/${documentName}\\.png(?:\\?cache=[^\"\s>]*)?|media/${documentName}.png?cache=$cache_hash|g" README.md
+                      rm -f media/${documentName}-*.png
+                      cp -f media/${documentName}.png media/${documentName}-$cache_hash.png
+                      ${lib.getExe pkgs.perl} -i -pe "s|media/${documentName}(?:-[0-9a-f]{7})?\\.png(?:\\?cache=[^\"\s>]*)?|media/${documentName}-$cache_hash.png|g" README.md
                       ${lib.getExe pkgs.git} add ${documentName}.pdf media/ README.md
 
                       after="$(git ls-files -s ${documentName}.pdf media/ README.md 2>/dev/null)"

@@ -144,16 +144,17 @@
                     ];
                     text = ''
                       set -euo pipefail
-                      before="$(git ls-files -s ${documentName}.pdf media/ README.md 2>/dev/null)"
+                      before="$(git ls-files -s media/ README.md 2>/dev/null)"
 
                       if [ ! -f "result/${documentName}.pdf" ]; then
                         echo "missing result/${documentName}.pdf; run nix build .#document" >&2
                         exit 1
                       fi
 
-                      cp -f result/${documentName}.pdf ./
                       mkdir -p media
-                      pdftoppm -png -singlefile ${documentName}.pdf media/${documentName}
+                      cp -f result/${documentName}.pdf media/${documentName}.pdf
+                      rm -f ${documentName}.pdf
+                      pdftoppm -png -singlefile media/${documentName}.pdf media/${documentName}
                       if [ ! -f "media/${documentName}.png" ] && [ -f "media/${documentName}-1.png" ]; then
                         mv -f "media/${documentName}-1.png" "media/${documentName}.png"
                       fi
@@ -174,9 +175,9 @@
                       done
 
                       ${lib.getExe pkgs.perl} -i -pe "s|media/${documentName}(?:-[0-9a-f]{7})?\\.png(?:\\?cache=[^\"\s>]*)?|media/${documentName}-$cache_hash.png|g" README.md
-                      ${lib.getExe pkgs.git} add ${documentName}.pdf media/ README.md
+                      ${lib.getExe pkgs.git} add media/ README.md
 
-                      after="$(git ls-files -s ${documentName}.pdf media/ README.md 2>/dev/null)"
+                      after="$(git ls-files -s media/ README.md 2>/dev/null)"
 
                       if [ "$before" != "$after" ]; then
                         echo "media files updated & staged. Commit again"

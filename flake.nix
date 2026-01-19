@@ -143,14 +143,36 @@
                       perl
                     ];
                     text = ''
+                      set -euo pipefail
                       before="$(git ls-files -s ${documentName}.pdf media/ README.md 2>/dev/null)"
 
+                      if [ ! -f "result/${documentName}.pdf" ]; then
+                        echo "missing result/${documentName}.pdf; run nix build .#document" >&2
+                        exit 1
+                      fi
+
                       cp -f result/${documentName}.pdf ./
-                      pdftoppm ${documentName}.pdf ${documentName} -png -singlefile
-                      mv -f ${documentName}.png media/ || true
+                      mkdir -p media
+                      pdftoppm -png -singlefile ${documentName}.pdf media/${documentName}
+                      if [ ! -f "media/${documentName}.png" ] && [ -f "media/${documentName}-1.png" ]; then
+                        mv -f "media/${documentName}-1.png" "media/${documentName}.png"
+                      fi
+                      if [ ! -f "media/${documentName}.png" ] && [ -f "media/${documentName}-01.png" ]; then
+                        mv -f "media/${documentName}-01.png" "media/${documentName}.png"
+                      fi
+                      if [ ! -f "media/${documentName}.png" ]; then
+                        echo "failed to generate media/${documentName}.png" >&2
+                        exit 1
+                      fi
+
                       cache_hash="$(${lib.getExe pkgs.git} hash-object media/${documentName}.png | cut -c1-7)"
-                      rm -f media/${documentName}-*.png
-                      cp -f media/${documentName}.png media/${documentName}-$cache_hash.png
+                      cp -f "media/${documentName}.png" "media/${documentName}-$cache_hash.png"
+                      for file in media/${documentName}-*.png; do
+                        if [ "$file" != "media/${documentName}-$cache_hash.png" ]; then
+                          rm -f "$file"
+                        fi
+                      done
+
                       ${lib.getExe pkgs.perl} -i -pe "s|media/${documentName}(?:-[0-9a-f]{7})?\\.png(?:\\?cache=[^\"\s>]*)?|media/${documentName}-$cache_hash.png|g" README.md
                       ${lib.getExe pkgs.git} add ${documentName}.pdf media/ README.md
 

@@ -1,0 +1,93 @@
+\documentclass[10.5pt]{article}
+
+\usepackage{geometry}
+\geometry{
+	lmargin=0.5in,
+	rmargin=0.5in,
+	tmargin=0.6in,
+	bmargin=0.7in,
+}
+
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tgtermes}
+\usepackage[T1]{fontenc}
+
+\pagenumbering{gobble}
+\setlength{\parindent}{0pt}
+
+\usepackage{titlesec}
+\titlespacing*{\section}
+{0pt}   % left indent
+{1.0ex} % space before section title
+{0.25ex}% space after section title
+
+
+\usepackage{xparse}
+\ExplSyntaxOn
+\NewDocumentCommand{\resumeheader}{m+m}
+{
+	\begin{center}
+		{\LARGE\bfseries\scshape #1} \\
+		\vskip 0.5ex
+		\seq_set_from_clist:Nn \l_tmpa_seq { #2 }
+		\seq_use:Nn \l_tmpa_seq { \;$\cdot$\; }
+	\end{center}
+}
+
+\NewDocumentCommand{\lines}{m+m}
+{
+	\seq_set_from_clist:Nn \l_tmpa_seq { #1 }
+	\seq_use:Nn \l_tmpa_seq { \\ }
+}
+\NewDocumentCommand{\listline}{m+m}
+{
+	\textbf{#1:\;}
+	\seq_set_from_clist:Nn \l_tmpa_seq { #2 }
+	\seq_use:Nn \l_tmpa_seq { ,\; }
+}
+
+\NewDocumentCommand{\getenv}{om}
+{
+	\sys_get_shell:nnN{ kpsewhich ~ --var-value ~ #2 }{}#1
+}
+
+\ExplSyntaxOff
+
+
+\setlist[itemize]{
+	leftmargin=1.5em,
+	nosep,
+	%% label=\raisebox{0.2ex}{\rule{0.30em}{0.30em}}
+}
+
+%% line break btwn document sections
+\titleformat{\section}{\large\bfseries}{}{0em}{}[\hrule height 0.7pt]
+
+\newcommand{\postlinebreakspacing} {
+	\vspace{0.7ex}
+}
+\newcommand{\roleheader}[3]{
+	\postlinebreakspacing
+	\textbf{#1}, #2 \hfill #3
+}
+\newcommand{\role}[4]{
+	\roleheader{#1}{#2}{#3}
+
+	#4
+}
+\newcommand{\itemizedrole}[5]{
+	\roleheader{#1}{#2}{#3 -- #4}
+
+	\begin{itemize}
+		#5
+	\end{itemize}
+}
+\newcommand{\subrole}[5]{
+	\vspace{0.4ex}
+	\textit{#1, #2} \hfill \textit{#3 -- #4}
+
+	\begin{itemize}
+		#5
+	\end{itemize}
+}

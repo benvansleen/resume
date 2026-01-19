@@ -54,7 +54,7 @@
         generateReadme = pkgs.writeShellApplication {
           name = "generateReadme";
           text = ''
-            ${lib.getExe pkgs.pandoc} -s ${documentName}.tex -o README.md
+            ${lib.getExe pkgs.pandoc} -s src/${documentName}.tex -o README.md
           '';
         };
 
@@ -86,9 +86,9 @@
               mkdir -p .cache/texmf-var
               env TEXMFHOME=.cache TEXMFVAR=.cache/texmf-var \
                 SOURCE_DATE_EPOCH=${toString self.lastModified} \
-                latexmk -interaction=nonstopmode -pdflatex \
+                latexmk -interaction=nonstopmode -pdflatex -outdir=. \
                 -pretex="\pdftrailerid{}" \
-                -usepretex -synctex=1 ${documentName}.tex
+                -usepretex -synctex=1 src/${documentName}.tex
             '';
 
             installPhase = ''

@@ -140,16 +140,19 @@
                     runtimeInputs = with pkgs; [
                       coreutils
                       poppler-utils
+                      perl
                     ];
                     text = ''
-                      before="$(git ls-files -s ${documentName}.pdf media/ 2>/dev/null)"
+                      before="$(git ls-files -s ${documentName}.pdf media/ README.md 2>/dev/null)"
 
                       cp -f result/${documentName}.pdf ./
                       pdftoppm ${documentName}.pdf ${documentName} -png -singlefile
                       mv -f ${documentName}.png media/ || true
-                      ${lib.getExe pkgs.git} add ${documentName}.pdf media/
+                      cache_hash="$(${lib.getExe pkgs.git} hash-object media/${documentName}.png | cut -c1-7)"
+                      ${lib.getExe pkgs.perl} -i -pe "s|media/${documentName}\\.png(?:\\?cache=[^\"\s>]*)?|media/${documentName}.png?cache=$cache_hash|g" README.md
+                      ${lib.getExe pkgs.git} add ${documentName}.pdf media/ README.md
 
-                      after="$(git ls-files -s ${documentName}.pdf media/ 2>/dev/null)"
+                      after="$(git ls-files -s ${documentName}.pdf media/ README.md 2>/dev/null)"
 
                       if [ "$before" != "$after" ]; then
                         echo "media files updated & staged. Commit again"
